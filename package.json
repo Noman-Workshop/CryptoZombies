@@ -3,10 +3,12 @@
 	"version": "1.0.0",
 	"description": "Follow through lessons of https://cryptozombies.io",
 	"scripts": {
-		"solcjs": "solcjs --version",
+		"solcjs:abi": "solcjs --abi --include-path node_modules/ --output-dir dist\\abi --base-path . contracts\\ZombieFactory.sol",
+		"solcjs:bin": "solcjs --bin --include-path node_modules/ --output-dir dist\\bin --base-path . contracts\\ZombieFactory.sol",
+		"solcjs": "concurrently npm:solcjs:*",
 		"lint:sol:solhint": "solhint contracts\\**\\*.sol",
 		"lint:sol:prettier": "prettier -c \"contracts/**/*.sol\"",
-		"lint:sol": "npm run npm:lint:sol:*",
+		"lint:sol": "concurrently npm:lint:sol:*",
 		"lint:sol:fix": "prettier --write \"contracts/**/*.sol\""
 	},
 	"keywords": [
@@ -17,6 +19,7 @@
 	"author": "Noman5237",
 	"license": "ISC",
 	"devDependencies": {
+		"concurrently": "^6.5.0",
 		"prettier": "^2.5.1",
 		"prettier-plugin-solidity": "^1.0.0-beta.19",
 		"solc": "^0.5",
