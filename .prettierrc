@@ -9,8 +9,7 @@
 			"options": {
 				"tabWidth": 4,
 				"useTabs": true,
-				"printWidth": 120,
-				"explicitTypes": "always"
+				"printWidth": 120
 			}
 		}
 	]
