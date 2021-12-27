@@ -13,10 +13,10 @@ contract ZombieFactory is Ownable {
 	event NewZombie(uint zombieId, string name, uint dna);
 
 	// no of digits in zombie dna
-	uint dnaDigits = 16;
-	uint dnaModulus = 10**dnaDigits;
+	uint public dnaDigits = 16;
+	uint internal dnaModulus = 10**dnaDigits;
 	// cooldown time
-	uint cooldownTime = 1 days;
+	uint public cooldownTime = 1 days;
 
 	// a structure that contains information for a particular instance of Zombie
 	struct Zombie {
@@ -32,10 +32,10 @@ contract ZombieFactory is Ownable {
 	Zombie[] public zombies;
 
 	// map to store the owner of the zombies
-	mapping(uint => address) public zombieToOwner;
+	mapping(uint => address) internal zombieToOwner;
 
 	// map to store the no of zombies owned by an owner
-	mapping(address => uint) ownerZombieCount;
+	mapping(address => uint) internal ownerZombieCount;
 
 	// instantiates a new zombie and pushes it to the array
 	function _createZombie(string memory _name, uint _dna) internal {
@@ -56,7 +56,7 @@ contract ZombieFactory is Ownable {
 	// public function that lets people create zombies with unique dna
 	// generated from the given name
 	function createRandomZombie(string memory _name) public {
-		require(ownerZombieCount[msg.sender] == 0);
+		require(ownerZombieCount[msg.sender] == 0, "can't create one original zombie");
 		uint randDna = _generateRandomDna(_name);
 		_createZombie(_name, randDna);
 	}

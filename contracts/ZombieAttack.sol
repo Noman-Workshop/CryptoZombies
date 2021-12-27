@@ -9,8 +9,8 @@ contract ZombieAttack is ZombieHelper {
 	using SafeMath for uint;
 	using SafeCast for uint;
 
-	uint randNonce = 0;
-	uint attackVictoryProbability = 70;
+	uint private randNonce = 0;
+	uint private attackVictoryProbability = 70;
 
 	function randMod(uint _modulus) internal returns (uint) {
 		randNonce = randNonce.add(1);

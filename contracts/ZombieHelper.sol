@@ -4,10 +4,10 @@ pragma solidity ^0.8.0;
 import "./ZombieFeeding.sol";
 
 contract ZombieHelper is ZombieFeeding {
-	uint levelUpFee = 0.001 ether;
+	uint private levelUpFee = 0.001 ether;
 
 	modifier aboveLevel(uint _level, uint _zombieId) {
-		require(zombies[_zombieId].level >= _level);
+		require(zombies[_zombieId].level >= _level, "zombie isn't powerful enough");
 		_;
 	}
 
@@ -21,7 +21,7 @@ contract ZombieHelper is ZombieFeeding {
 	}
 
 	function levelUp(uint _zombieId) external payable {
-		require(msg.value == levelUpFee);
+		require(msg.value == levelUpFee, "can't level up without eth");
 		zombies[_zombieId].level++;
 	}
 
