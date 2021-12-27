@@ -49,17 +49,23 @@ task(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args: TaskArguments, hre, runS
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
+const PROVIDER: string = process.env.PROVIDER || "";
+const NETWORKS = Object.fromEntries(
+  Object.entries({ rinkeby: {}, mumbai: {} }).map(([network]) => [
+    network,
+    {
+      url: `${process.env[PROVIDER + `_${network.toUpperCase()}_URL`]}${process.env[PROVIDER + "_API_KEY"]}` || "",
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+  ])
+);
+
 const config: HardhatUserConfig = {
   // Currently supports only a single solidity version
   solidity: {
     version: "0.8.9",
   },
-  networks: {
-    rinkeby: {
-      url: process.env.RINKEBY_URL || "",
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-    },
-  },
+  networks: NETWORKS,
   // create a separate file for mocha config
   mocha: {
     timeout: 50000,
