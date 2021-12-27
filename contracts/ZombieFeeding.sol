@@ -1,8 +1,9 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
 import "./ZombieFactory.sol";
 
-contract KittyInterface {
+interface KittyInterface {
 	function getKitty(uint _id)
 		external
 		view
@@ -33,11 +34,11 @@ contract ZombieFeeding is ZombieFactory {
 	}
 
 	function _triggerCooldown(Zombie storage _zombie) internal {
-		_zombie.readyTime = uint32(now + cooldownTime);
+		_zombie.readyTime = uint32(block.timestamp + cooldownTime);
 	}
 
 	function _isReady(Zombie storage _zombie) internal view returns (bool) {
-		return (_zombie.readyTime <= now);
+		return (_zombie.readyTime <= block.timestamp);
 	}
 
 	function feedAndMultiply(
