@@ -1,17 +1,25 @@
 pragma solidity >=0.5.0 <0.6.0;
 
-contract ZombieFactory {
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract ZombieFactory is Ownable {
 	// event that fires whenever a new zombie is created
 	event NewZombie(uint zombieId, string name, uint dna);
 
 	// no of digits in zombie dna
 	uint dnaDigits = 16;
 	uint dnaModulus = 10**dnaDigits;
+	// cooldown time
+	uint cooldownTime = 1 days;
 
 	// a structure that contains information for a particular instance of Zombie
 	struct Zombie {
 		string name;
 		uint dna;
+		uint32 level;
+		uint32 readyTime;
+		uint16 winCount;
+		uint16 lossCount;
 	}
 
 	// list of all created zombies
@@ -25,7 +33,7 @@ contract ZombieFactory {
 
 	// instantiates a new zombie and pushes it to the array
 	function _createZombie(string memory _name, uint _dna) internal {
-		uint id = zombies.push(Zombie(_name, _dna)) - 1;
+		uint id = zombies.push(Zombie(_name, _dna, 1, uint32(now + cooldownTime), 0, 0)) - 1;
 		zombieToOwner[id] = msg.sender;
 		ownerZombieCount[msg.sender]++;
 		emit NewZombie(id, _name, _dna);
