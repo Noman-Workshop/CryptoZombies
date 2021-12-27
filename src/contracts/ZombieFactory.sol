@@ -2,8 +2,13 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
 contract ZombieFactory is Ownable {
+	using SafeMath for uint;
+	using SafeCast for uint;
+
 	// event that fires whenever a new zombie is created
 	event NewZombie(uint zombieId, string name, uint dna);
 
@@ -17,8 +22,8 @@ contract ZombieFactory is Ownable {
 	struct Zombie {
 		string name;
 		uint dna;
+		uint64 readyTime;
 		uint32 level;
-		uint32 readyTime;
 		uint16 winCount;
 		uint16 lossCount;
 	}
@@ -34,10 +39,10 @@ contract ZombieFactory is Ownable {
 
 	// instantiates a new zombie and pushes it to the array
 	function _createZombie(string memory _name, uint _dna) internal {
-		zombies.push(Zombie(_name, _dna, 1, uint32(block.timestamp + cooldownTime), 0, 0));
-		uint id = zombies.length - 1;
+		zombies.push(Zombie(_name, _dna, uint64(block.timestamp + cooldownTime), 1, 0, 0));
+		uint id = zombies.length.sub(1);
 		zombieToOwner[id] = msg.sender;
-		ownerZombieCount[msg.sender]++;
+		ownerZombieCount[msg.sender] = ownerZombieCount[msg.sender].add(1);
 		emit NewZombie(id, _name, _dna);
 	}
 
